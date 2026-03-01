@@ -8,9 +8,6 @@
   "enable_gpu": "true",
   "enable_internet": "true",
   "dataset_sources": [
-    "hichambedrani/enhanced-precision-system-data",
-    "thedevastator/grade-school-math-8k-q-a",
-    "konradb/chain-of-thought-collection",
-    "dolbokostya/math-problems-with-answers-aime-imo"
+    "hichambedrani/enhanced-precision-system-data"
   ]
 }
