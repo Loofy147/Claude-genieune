@@ -1,6 +1,6 @@
 {
-  "id": "hichambedrani/actual-precision-system-notebook",
-  "title": "actual-precision-system-notebook",
+  "id": "hichambedrani/enhanced-precision-system-notebook",
+  "title": "enhanced-precision-system-notebook",
   "code_file": "benchmark_run.py",
   "language": "python",
   "kernel_type": "script",
@@ -8,6 +8,9 @@
   "enable_gpu": "true",
   "enable_internet": "true",
   "dataset_sources": [
-    "hichambedrani/actual-precision-system-data"
+    "hichambedrani/enhanced-precision-system-data",
+    "thedevastator/grade-school-math-8k-q-a",
+    "konradb/chain-of-thought-collection",
+    "dolbokostya/math-problems-with-answers-aime-imo"
   ]
 }

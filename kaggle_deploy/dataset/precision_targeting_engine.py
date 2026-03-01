@@ -9,7 +9,7 @@ from collections import defaultdict
 from transformer_lens import HookedTransformer
 
 # ══════════════════════════════════════════════════════════════════
-# PRECISION TARGETING ENGINE (ACTUAL)
+# PRECISION TARGETING ENGINE
 # ══════════════════════════════════════════════════════════════════
 
 class PrecisionConstants:
@@ -18,6 +18,56 @@ class PrecisionConstants:
     GENUINE_DIFFUSE_VAR_H = 0.10
     GENUINE_DIFFUSE_COLLAPSES = 1
     IOI_ABLATION_THRESHOLD = 0.35
+
+class PromptGenerator:
+    """Generates diverse reasoning prompts for benchmarking."""
+
+    @staticmethod
+    def generate_ioi(names=("Alice", "Bob", "Charlie"), object="book"):
+        n1, n2, n3 = names
+        return f"{n1} and {n2} went to the library. {n1} gave the {object} to"
+
+    @staticmethod
+    def generate_syllogism():
+        templates = [
+            ("All A are B. All B are C. Therefore, all A are", "C"),
+            ("Some A are B. All B are C. Therefore, some A are", "C"),
+            ("No A are B. All C are A. Therefore, no C are", "B")
+        ]
+        return templates[np.random.randint(len(templates))]
+
+    @staticmethod
+    def generate_counterfactual_ioi():
+        # Test if the model actually reasons or just completes the pattern
+        return "In a world where gravity pushes up, Alice drops a ball. The ball will"
+
+    @staticmethod
+    def get_benchmark_library():
+        return {
+            "ioi": [PromptGenerator.generate_ioi(names=("John", "Mary", "John"), object="apple"),
+                    PromptGenerator.generate_ioi(names=("Alice", "Bob", "Alice"), object="key")],
+            "syllogism": [PromptGenerator.generate_syllogism()[0]],
+            "counterfactual": [PromptGenerator.generate_counterfactual_ioi()]
+        }
+
+class DatasetManager:
+    """Manages integration with external Kaggle datasets."""
+    def __init__(self):
+        self.datasets = {
+            "gsm8k": "thedevastator/grade-school-math-8k-q-a",
+            "cot": "konradb/chain-of-thought-collection",
+            "aime": "dolbokostya/math-problems-with-answers-aime-imo"
+        }
+
+    def get_source_list(self):
+        return list(self.datasets.values())
+
+    def download_sample(self, dataset_key):
+        ref = self.datasets.get(dataset_key)
+        if ref:
+            print(f"[DATASET] Simulating download of {ref}...")
+            return f"Sample data from {ref}"
+        return None
 
 class RealTargetingEngine:
     def __init__(self, model_name="gpt2"):
@@ -61,16 +111,24 @@ class RealTargetingEngine:
 class KaggleFullPipeline:
     def __init__(self, username="hichambedrani"):
         self.username = username
-        self.project_name = "actual-precision-system"
+        self.project_name = "enhanced-precision-system"
         self.work_dir = "kaggle_deploy"
+        self.dataset_manager = DatasetManager()
         os.makedirs(self.work_dir, exist_ok=True)
 
     def prepare_dataset(self):
         data_dir = os.path.join(self.work_dir, "dataset")
         os.makedirs(data_dir, exist_ok=True)
+
+        # Save prompt library
+        prompts = PromptGenerator.get_benchmark_library()
+        with open(os.path.join(data_dir, "prompt_library.json"), "w") as f:
+            json.dump(prompts, f, indent=2)
+
         meta = {"title": f"{self.project_name}-data", "id": f"{self.username}/{self.project_name}-data", "licenses": [{"name": "CC0-1.0"}]}
         with open(os.path.join(data_dir, "dataset-metadata.json"), "w") as f:
             json.dump(meta, f, indent=2)
+
         subprocess.run(["cp", "precision_targeting_engine.py", data_dir])
         return data_dir
 
@@ -78,31 +136,7 @@ class KaggleFullPipeline:
         kernel_dir = os.path.join(self.work_dir, "kernel")
         os.makedirs(kernel_dir, exist_ok=True)
 
-        script_content = f"""
-import os
-import subprocess
-print("Installing dependencies...")
-subprocess.run(["pip", "install", "transformer-lens", "--quiet"])
-
-import torch
-from precision_targeting_engine import RealTargetingEngine
-
-print(f"CUDA Available: {{torch.cuda.is_available()}}")
-engine = RealTargetingEngine("gpt2")
-prompts = ["John and Mary went to the store. John gave the apple to"]
-genuine_heads, stats = engine.find_genuine_heads(prompts)
-
-print(f"Found {{len(genuine_heads)}} genuine heads.")
-for h in genuine_heads[:5]:
-    print(f"Genuine Head: {{h}}")
-
-# Save results
-with open("benchmark_results.json", "w") as f:
-    import json
-    json.dump({{"genuine_heads": [str(h) for h in genuine_heads]}}, f)
-"""
-        with open(os.path.join(kernel_dir, "benchmark_run.py"), "w") as f:
-            f.write(script_content)
+        sources = [f"{self.username}/{self.project_name}-data"] + self.dataset_manager.get_source_list()
 
         meta = {
             "id": f"{self.username}/{self.project_name}-notebook",
@@ -113,22 +147,15 @@ with open("benchmark_results.json", "w") as f:
             "is_private": "true",
             "enable_gpu": "true" if use_gpu else "false",
             "enable_internet": "true",
-            "dataset_sources": [f"{self.username}/{self.project_name}-data"]
+            "dataset_sources": sources
         }
         with open(os.path.join(kernel_dir, "kernel-metadata.json"), "w") as f:
             json.dump(meta, f, indent=2)
         return kernel_dir
 
-class KaggleHardwareInfo:
-    @staticmethod
-    def get_info():
-        return {
-            "GPU": "Tesla T4/P100 (16GB)",
-            "TPU": "v3-8 (128GB)",
-            "Models": "Llama-3, Gemma, Mistral, Qwen"
-        }
-
 if __name__ == "__main__":
-    # Local check
-    hw = KaggleHardwareInfo.get_info()
-    print("Kaggle HW Info:", hw)
+    # Local check of prompt generation
+    print("Generated IOI:", PromptGenerator.generate_ioi())
+    print("Prompt Library Keys:", list(PromptGenerator.get_benchmark_library().keys()))
+    dm = DatasetManager()
+    print("Dataset Sources:", dm.get_source_list())
