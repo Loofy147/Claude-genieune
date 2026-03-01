@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-03-01T21:15:55.001410",
+  "k_degrade": 0.8129,
+  "k_recover": 1.2371,
+  "asymmetry_ratio": 0.66,
+  "halflife_degrade": 0.85,
+  "halflife_recover": 0.56,
+  "basin_depth": 0.33,
+  "escape_heads": "1",
+  "destroy_heads": "3",
+  "x_threshold": 0.55,
+  "y_threshold": 0.55,
+  "differential_equation": {
+    "degrade": "dG/dt = -0.8129 * G",
+    "recover": "dG/dt = +1.2371 * (G_max - G)"
+  }
+}

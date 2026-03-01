@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-03-01T20:52:48.625863",
+  "framework": "causal_ablation",
+  "tests_run": [
+    "mean_ablation",
+    "double_dissociation",
+    "thermodynamic_signature"
+  ],
+  "dissociation_confirmed": true,
+  "stochastic_parrot_falsified": true,
+  "what_is_proved": "Internal consistency of framework on simulated circuits",
+  "what_requires_real_model": "Actual ablation on real weights to confirm causal necessity"
+}

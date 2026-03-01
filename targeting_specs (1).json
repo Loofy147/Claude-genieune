@@ -1,0 +1,205 @@
+{
+  "timestamp": "2026-03-01T21:30:26.204711",
+  "task_targeting_specs": {
+    "ioi_reasoning": {
+      "task_type": "ioi_reasoning",
+      "description": "Indirect object identification \u2014 who received what",
+      "model_dimensions": {
+        "n_layers": 32,
+        "n_heads": 32
+      },
+      "search_space": {
+        "layer_range": [
+          21,
+          32
+        ],
+        "total_heads_to_scan": 352,
+        "filter_quadrant": "GENUINE_DIFFUSE"
+      },
+      "signature_to_find": {
+        "dynamic_genuineness_range": [
+          0.7,
+          1.0
+        ],
+        "cost_range": [
+          0.3,
+          0.55
+        ],
+        "required_collapse_events": ">= 1",
+        "entropy_variance": "> 0.10"
+      },
+      "intervention_plan": {
+        "ablate": [
+          "name_mover_head",
+          "s_inhibition_head"
+        ],
+        "protect": [
+          "early_layer_broadcast"
+        ],
+        "ablation_method": "mean_ablation",
+        "expected_task_drop_pct": 35
+      },
+      "validation_criteria": {
+        "ablate_target_heads": "Task performance drops > 35%",
+        "ablate_pattern_heads": "Pattern task preserved > 98%",
+        "double_dissociation": "Required for causal proof"
+      }
+    },
+    "induction_pattern": {
+      "task_type": "induction_pattern",
+      "description": "A B ... A \u2192 B sequence completion",
+      "model_dimensions": {
+        "n_layers": 32,
+        "n_heads": 32
+      },
+      "search_space": {
+        "layer_range": [
+          8,
+          20
+        ],
+        "total_heads_to_scan": 384,
+        "filter_quadrant": "MECHANICAL_COMMITTED"
+      },
+      "signature_to_find": {
+        "dynamic_genuineness_range": [
+          0.0,
+          0.2
+        ],
+        "cost_range": [
+          0.8,
+          1.0
+        ],
+        "required_collapse_events": "0",
+        "entropy_variance": "< 0.01"
+      },
+      "intervention_plan": {
+        "ablate": [
+          "induction_head",
+          "previous_token_head"
+        ],
+        "protect": [
+          "name_mover_head"
+        ],
+        "ablation_method": "mean_ablation",
+        "expected_task_drop_pct": "unknown"
+      },
+      "validation_criteria": {
+        "ablate_target_heads": "Task performance drops > 20%",
+        "ablate_pattern_heads": "Pattern task preserved > 90%",
+        "double_dissociation": "Required for causal proof"
+      }
+    },
+    "logical_deduction": {
+      "task_type": "logical_deduction",
+      "description": "Multi-step if-then reasoning across context",
+      "model_dimensions": {
+        "n_layers": 32,
+        "n_heads": 32
+      },
+      "search_space": {
+        "layer_range": [
+          19,
+          32
+        ],
+        "total_heads_to_scan": 416,
+        "filter_quadrant": "GENUINE_DIFFUSE"
+      },
+      "signature_to_find": {
+        "dynamic_genuineness_range": [
+          0.55,
+          1.0
+        ],
+        "cost_range": [
+          0.25,
+          0.6
+        ],
+        "required_collapse_events": ">= 1",
+        "entropy_variance": "> 0.10"
+      },
+      "intervention_plan": {
+        "ablate": [
+          "name_mover_head"
+        ],
+        "protect": [
+          "early_layer_broadcast",
+          "s_inhibition_head"
+        ],
+        "ablation_method": "mean_ablation",
+        "expected_task_drop_pct": 40
+      },
+      "validation_criteria": {
+        "ablate_target_heads": "Task performance drops > 40%",
+        "ablate_pattern_heads": "Pattern task preserved > 95%",
+        "double_dissociation": "Required for causal proof"
+      }
+    },
+    "self_referential": {
+      "task_type": "self_referential",
+      "description": "Questions about the system's own process",
+      "model_dimensions": {
+        "n_layers": 32,
+        "n_heads": 32
+      },
+      "search_space": {
+        "layer_range": [
+          16,
+          28
+        ],
+        "total_heads_to_scan": 384,
+        "filter_quadrant": "UNCERTAIN"
+      },
+      "signature_to_find": {
+        "dynamic_genuineness_range": [
+          0.35,
+          0.65
+        ],
+        "cost_range": [
+          0.1,
+          0.4
+        ],
+        "required_collapse_events": "0",
+        "entropy_variance": "< 0.01"
+      },
+      "intervention_plan": {
+        "ablate": [
+          "s_inhibition_head",
+          "name_mover_head"
+        ],
+        "protect": [
+          "early_layer_broadcast"
+        ],
+        "ablation_method": "mean_ablation",
+        "expected_task_drop_pct": "unknown"
+      },
+      "validation_criteria": {
+        "ablate_target_heads": "Task performance drops > 20%",
+        "ablate_pattern_heads": "Pattern task preserved > 90%",
+        "double_dissociation": "Required for causal proof"
+      },
+      "warning": "Self-referential tasks show highest variance \u2014 hardest to target"
+    }
+  },
+  "intervention_protocols": {
+    "suppress_pattern": {
+      "description": "Reduce pattern completion pull in mechanical heads",
+      "intervention": "mean_ablation",
+      "target_quadrant": "MECHANICAL_COMMITTED"
+    },
+    "amplify_genuine": {
+      "description": "Boost variance in genuine computation heads \u2014 strengthen collapse signal",
+      "intervention": "temperature_sharpening",
+      "target_quadrant": "GENUINE_DIFFUSE"
+    },
+    "patch_from_reasoning": {
+      "description": "Replace pattern head activations with activations from a reasoning prompt",
+      "intervention": "activation_patching",
+      "target_quadrant": "MECHANICAL_COMMITTED"
+    }
+  },
+  "rate_constants": {
+    "k_degrade": 0.8129,
+    "k_recover": 1.2371,
+    "half_life_degrade": 0.85,
+    "half_life_recover": 0.56
+  }
+}
