@@ -4,7 +4,7 @@
     "Alice and Bob went to the library. Alice gave the key to"
   ],
   "syllogism": [
-    "Some A are B. All B are C. Therefore, some A are"
+    "No A are B. All C are A. Therefore, no C are"
   ],
   "counterfactual": [
     "In a world where gravity pushes up, Alice drops a ball. The ball will"
