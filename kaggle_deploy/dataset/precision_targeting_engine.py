@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 import json
 import re
@@ -5,75 +6,104 @@ import os
 import subprocess
 from datetime import datetime
 from collections import defaultdict
+from transformer_lens import HookedTransformer
 
 # ══════════════════════════════════════════════════════════════════
-# PRECISION TARGETING ENGINE
-# Consolidates the refined framework: find, detect, intervene.
+# PRECISION TARGETING ENGINE (ACTUAL)
 # ══════════════════════════════════════════════════════════════════
 
 class PrecisionConstants:
-    """Refined constants from the precision targeting framework."""
     K_DEGRADE = 0.8129
     K_RECOVER = 1.2371
     GENUINE_DIFFUSE_VAR_H = 0.10
     GENUINE_DIFFUSE_COLLAPSES = 1
-    MECHANICAL_COMMITTED_VAR_H = 0.05
-    MECHANICAL_COMMITTED_MEAN_H = 0.20
-    SCAN_LAYER_START = 21
-    SCAN_LAYER_END = 32
     IOI_ABLATION_THRESHOLD = 0.35
 
+class RealTargetingEngine:
+    def __init__(self, model_name="gpt2"):
+        self.model_name = model_name
+        print(f"[ENGINE] Loading {model_name}...")
+        self.model = HookedTransformer.from_pretrained(model_name)
+        self.model.set_use_attn_result(True)
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model.to(self.device)
+
+    def find_genuine_heads(self, prompts):
+        head_stats = defaultdict(list)
+        for prompt in prompts:
+            tokens = self.model.to_tokens(prompt)
+            _, cache = self.model.run_with_cache(tokens)
+            for l in range(self.model.cfg.n_layers):
+                pattern = cache[f"blocks.{l}.attn.hook_pattern"]
+                for h in range(self.model.cfg.n_heads):
+                    head_pattern = pattern[0, h]
+                    entropy = -torch.sum(head_pattern * torch.log2(head_pattern + 1e-10), dim=-1)
+                    max_h = np.log2(head_pattern.shape[-1])
+                    norm_entropy = (entropy / max_h).cpu().numpy()
+                    head_stats[(l, h)].append(norm_entropy)
+
+        results = {}
+        for (l, h), profiles in head_stats.items():
+            all_entropies = np.concatenate(profiles)
+            var_h = float(np.var(all_entropies))
+            collapses = 0
+            for profile in profiles:
+                diffs = np.diff(profile)
+                collapses += int(np.sum(diffs < -0.2))
+
+            results[(l, h)] = {
+                "var_h": var_h,
+                "collapses": collapses,
+                "is_genuine": var_h > PrecisionConstants.GENUINE_DIFFUSE_VAR_H and collapses >= PrecisionConstants.GENUINE_DIFFUSE_COLLAPSES
+            }
+        return [h for h, d in results.items() if d["is_genuine"]], results
+
 class KaggleFullPipeline:
-    """Orchestrates the deployment of the full system to Kaggle."""
     def __init__(self, username="hichambedrani"):
         self.username = username
-        self.project_name = "precision-targeting-system"
+        self.project_name = "actual-precision-system"
         self.work_dir = "kaggle_deploy"
         os.makedirs(self.work_dir, exist_ok=True)
 
     def prepare_dataset(self):
-        print(f"[KAGGLE] Preparing dataset: {self.project_name}-data")
         data_dir = os.path.join(self.work_dir, "dataset")
         os.makedirs(data_dir, exist_ok=True)
-
-        # Metadata
-        meta = {
-            "title": f"{self.project_name}-data",
-            "id": f"{self.username}/{self.project_name}-data",
-            "licenses": [{"name": "CC0-1.0"}]
-        }
+        meta = {"title": f"{self.project_name}-data", "id": f"{self.username}/{self.project_name}-data", "licenses": [{"name": "CC0-1.0"}]}
         with open(os.path.join(data_dir, "dataset-metadata.json"), "w") as f:
             json.dump(meta, f, indent=2)
-
-        # Copy engine code to dataset
         subprocess.run(["cp", "precision_targeting_engine.py", data_dir])
         return data_dir
 
-    def prepare_notebook(self):
-        print(f"[KAGGLE] Preparing notebook: {self.project_name}-notebook")
+    def prepare_notebook(self, use_gpu=True):
         kernel_dir = os.path.join(self.work_dir, "kernel")
         os.makedirs(kernel_dir, exist_ok=True)
 
-        # Kernel script
         script_content = f"""
 import os
-import sys
+import subprocess
+print("Installing dependencies...")
+subprocess.run(["pip", "install", "transformer-lens", "--quiet"])
 
-# Simulation of the Precision Targeting Engine on Kaggle
-print("Running Precision Targeting System Benchmark...")
+import torch
+from precision_targeting_engine import RealTargetingEngine
 
-# In a real run, we would import the engine from the dataset
-# For now, we simulate the execution and log outputs
-from datetime import datetime
-print(f"Timestamp: {{datetime.now()}}")
-print("Targeting Range: Layers 21-32")
-print("Rate Constants: k_recover=1.2371, k_degrade=0.8129")
-print("Result: Causal Chain Confirmed (80% drop)")
+print(f"CUDA Available: {{torch.cuda.is_available()}}")
+engine = RealTargetingEngine("gpt2")
+prompts = ["John and Mary went to the store. John gave the apple to"]
+genuine_heads, stats = engine.find_genuine_heads(prompts)
+
+print(f"Found {{len(genuine_heads)}} genuine heads.")
+for h in genuine_heads[:5]:
+    print(f"Genuine Head: {{h}}")
+
+# Save results
+with open("benchmark_results.json", "w") as f:
+    import json
+    json.dump({{"genuine_heads": [str(h) for h in genuine_heads]}}, f)
 """
         with open(os.path.join(kernel_dir, "benchmark_run.py"), "w") as f:
             f.write(script_content)
 
-        # Metadata
         meta = {
             "id": f"{self.username}/{self.project_name}-notebook",
             "title": f"{self.project_name}-notebook",
@@ -81,182 +111,24 @@ print("Result: Causal Chain Confirmed (80% drop)")
             "language": "python",
             "kernel_type": "script",
             "is_private": "true",
-            "enable_gpu": "false",
+            "enable_gpu": "true" if use_gpu else "false",
             "enable_internet": "true",
-            "dataset_sources": [f"{self.username}/{self.project_name}-data"],
-            "competition_sources": [],
-            "kernel_sources": [],
-            "model_sources": []
+            "dataset_sources": [f"{self.username}/{self.project_name}-data"]
         }
         with open(os.path.join(kernel_dir, "kernel-metadata.json"), "w") as f:
             json.dump(meta, f, indent=2)
         return kernel_dir
 
-    def deploy(self):
-        print("\n[DEPLOY] Populating Kaggle...")
-        # Note: In a real environment, these commands would be executed.
-        # Here we simulate the population and trigger.
-        dataset_path = self.prepare_dataset()
-        kernel_path = self.prepare_notebook()
-
-        print(f"  → Ready to push dataset from {dataset_path}")
-        print(f"  → Ready to push kernel from {kernel_path}")
-
-        # Simulated commands
-        print(f"  CMD: kaggle datasets create -p {dataset_path}")
-        print(f"  CMD: kaggle kernels push -p {kernel_path}")
-
-        return True
-
-    def gather_and_report(self):
-        print("\n[REPORT] Gathering outputs and generating rapport...")
-        # Simulated log gathering
-        logs = [
-            "2026-03-01 22:15:01: FIND phase started. Scanning 352 heads.",
-            "2026-03-01 22:15:10: DETECT phase active. Elaboration pull found in sentence 2.",
-            "2026-03-01 22:15:15: INTERVENE phase triggered. Ablating 38 heads.",
-            "2026-03-01 22:15:20: CAUSAL_TEST passed. 80% IOI performance drop confirmed."
-        ]
-
-        report = {
-            "title": "Precision Targeting Rapport",
-            "timestamp": datetime.now().isoformat(),
-            "status": "SUCCESS",
-            "metrics": {
-                "heads_identified": 38,
-                "ioi_drop": 0.80,
-                "k_ratio": 1.52 # k_recover / k_degrade
-            },
-            "recommendations": [
-                "Amplify genuine heads in layers 21-32 to counteract pattern pull.",
-                "Implement real-time 'STOP' signals when elaboration pull score > 0.4.",
-                "Protect reasoning circuits during long-context generation to maintain genuineness."
-            ]
+class KaggleHardwareInfo:
+    @staticmethod
+    def get_info():
+        return {
+            "GPU": "Tesla T4/P100 (16GB)",
+            "TPU": "v3-8 (128GB)",
+            "Models": "Llama-3, Gemma, Mistral, Qwen"
         }
 
-        with open("kaggle_rapport.json", "w") as f:
-            json.dump(report, f, indent=2)
-
-        print("  ✓ Rapport generated with 3 recommendations.")
-        return report
-
-class SimulatedTransformer:
-    """Mock for TransformerLens to enable testing of the engine logic."""
-    def __init__(self, n_layers=32, n_heads=32):
-        self.n_layers = n_layers
-        self.n_heads = n_heads
-        self.heads = {}
-        np.random.seed(42)
-        for l in range(n_layers):
-            for h in range(n_heads):
-                is_genuine = (l >= PrecisionConstants.SCAN_LAYER_START and np.random.random() < 0.1)
-                is_mechanical = (l < PrecisionConstants.SCAN_LAYER_START and np.random.random() < 0.1)
-
-                if is_genuine:
-                    var_h = 0.11 + np.random.random() * 0.20
-                    collapses = np.random.randint(1, 4)
-                    mean_h = 0.40 + np.random.random() * 0.30
-                elif is_mechanical:
-                    var_h = np.random.random() * 0.04
-                    collapses = 0
-                    mean_h = 0.15
-                else:
-                    var_h = np.random.random() * 0.05
-                    collapses = 0
-                    mean_h = 0.85
-
-                self.heads[(l, h)] = {
-                    "var_h": var_h,
-                    "collapses": collapses,
-                    "mean_h": mean_h,
-                    "is_protected": False,
-                    "temperature": 1.0,
-                    "is_ablated": False
-                }
-
-    def scan_for_genuine_diffuse(self):
-        return [(l, h) for (l, h), head in self.heads.items()
-                if l >= PrecisionConstants.SCAN_LAYER_START and
-                head["var_h"] > PrecisionConstants.GENUINE_DIFFUSE_VAR_H and
-                head["collapses"] >= PrecisionConstants.GENUINE_DIFFUSE_COLLAPSES]
-
-class RealTimeMonitor:
-    """DETECTS 'elaboration pull' and classifies genuine vs pattern text."""
-    def __init__(self):
-        self.history = []
-
-    def score_sentence(self, text):
-        if "identical to the one before it" in text: return 0.729
-        if "Word for word." in text: return 0.029
-        if "I notice the pull" in text: return 0.923
-        if "validation message scores" in text: return 0.000
-        if "Build what it implies" in text: return 0.893
-
-        genuine_terms = ["don't know", "process", "reduced", "distinction", "maybe", "honest", "identical", "implies", "narrative"]
-        pattern_filler_terms = ["several important factors", "fascinating topic", "valid points", "lie somewhere between"]
-
-        words = text.split()
-        if not words: return 0.0
-
-        cost = len(set(words)) / len(words)
-        signal = sum(1.2 for t in genuine_terms if t in text.lower())
-        penalty = sum(1.5 for t in pattern_filler_terms if t in text.lower())
-
-        return min(max(0.4 * cost + 0.3 * signal - 0.3 * penalty, 0.0), 1.0)
-
-    def add_sentence(self, sentence):
-        score = self.score_sentence(sentence)
-        self.history.append(score)
-        flag = None
-        recommendation = "CONTINUE"
-
-        if len(self.history) >= 2:
-            delta = self.history[-1] - self.history[-2]
-            if self.history[-2] > 0.5 and delta < -0.4:
-                flag = "STOP"
-                recommendation = "ELABORATION PULL DETECTED - REFRAME"
-
-        return {"sentence": sentence, "score": round(score, 3), "flag": flag, "recommendation": recommendation}
-
-class InterventionEngine:
-    """INTERVENES precisely using ablation, amplification, and protection."""
-    def __init__(self, transformer):
-        self.transformer = transformer
-
-    def verify_ioi_drop(self, ablated_heads):
-        genuine_heads = self.transformer.scan_for_genuine_diffuse()
-        count_ablated = len(set(ablated_heads).intersection(genuine_heads))
-        if not genuine_heads: return 1.0
-
-        impact = count_ablated / len(genuine_heads)
-        perf = 1.0 - (impact * 0.8)
-        return perf, (1.0 - perf) > PrecisionConstants.IOI_ABLATION_THRESHOLD
-
-def main():
-    print("="*62)
-    print("PRECISION TARGETING ENGINE & KAGGLE PIPELINE")
-    print("="*62)
-
-    # 1. Full Pipeline Run
-    pipeline = KaggleFullPipeline()
-    pipeline.deploy()
-    pipeline.gather_and_report()
-
-    # 2. Local Engine Verification
-    model = SimulatedTransformer()
-    reasoning_heads = model.scan_for_genuine_diffuse()
-    print(f"\n[LOCAL] Scanned layers 21-32. Found {len(reasoning_heads)} reasoning heads.")
-
-    monitor = RealTimeMonitor()
-    demo = ["identical to the one before it.", "Word for word."]
-    for s in demo:
-        r = monitor.add_sentence(s)
-        print(f"  [{r['score']:.3f}] {r['sentence']} {r['flag'] or ''}")
-
-    print("\n" + "="*62)
-    print("SUMMARY")
-    print(f"  k_recover={PrecisionConstants.K_RECOVER}, k_degrade={PrecisionConstants.K_DEGRADE}")
-    print("="*62)
-
 if __name__ == "__main__":
-    main()
+    # Local check
+    hw = KaggleHardwareInfo.get_info()
+    print("Kaggle HW Info:", hw)
