@@ -1,0 +1,19 @@
+[{"stream_name":"stdout","time":0.756287921,"data":"--- Initializing Genuineness Benchmark Environment ---\n"}
+,{"stream_name":"stdout","time":3.939704203,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.7/43.7 kB 2.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":4.492177343,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 4.4 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":8.33744159,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.4/40.4 kB 2.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":9.197304861,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.7/57.7 kB 4.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":10.061094167,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.5/79.5 kB 6.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":10.861153646,"data":"ERROR: Cannot install torch==2.4.0 and transformer-lens==2.17.0 because these package versions have conflicting dependencies.\n"}
+,{"stream_name":"stderr","time":10.861545155,"data":"ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts\n"}
+,{"stream_name":"stdout","time":15.034759806,"data":"--- Benchmark Task Script Ready ---\n"}
+,{"stream_name":"stdout","time":15.034792775,"data":"Kbench available: False\n"}
+,{"stream_name":"stderr","time":17.880689534,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":17.880719936,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":18.120969245,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":18.120996287,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":18.663173122,"data":"/usr/local/lib/python3.12/dist-packages/traitlets/traitlets.py:2915: FutureWarning: --Exporter.preprocessors=[\"nbconvert.preprocessors.ExtractOutputPreprocessor\"] for containers is deprecated in traitlets 5.0. You can pass `--Exporter.preprocessors item` ... multiple times to add items to a list.\n"}
+,{"stream_name":"stderr","time":18.663206059,"data":"  warn(\n"}
+,{"stream_name":"stderr","time":18.697512206,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":19.9408411,"data":"[NbConvertApp] Writing 320550 bytes to __results__.html\n"}
+]
