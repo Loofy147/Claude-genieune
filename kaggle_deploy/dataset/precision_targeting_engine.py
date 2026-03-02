@@ -8,7 +8,7 @@ from datetime import datetime
 from collections import defaultdict
 
 # ══════════════════════════════════════════════════════════════════
-# PRECISION TARGETING ENGINE
+# PRECISION TARGETING ENGINE (HIGH FIDELITY)
 # ══════════════════════════════════════════════════════════════════
 
 class PrecisionConstants:
@@ -17,6 +17,18 @@ class PrecisionConstants:
     GENUINE_DIFFUSE_VAR_H = 0.10
     GENUINE_DIFFUSE_COLLAPSES = 1
     IOI_ABLATION_THRESHOLD = 0.35
+
+class PromptGenerator:
+    @staticmethod
+    def generate_ioi(n=50):
+        names = [("Alice", "Bob"), ("John", "Mary"), ("Charlie", "David"), ("Eve", "Frank")]
+        objects = ["apple", "book", "key", "pen", "phone"]
+        prompts = []
+        for i in range(n):
+            p1, p2 = names[i % len(names)]
+            obj = objects[i % len(objects)]
+            prompts.append(f"{p1} and {p2} went to the library. {p1} gave the {obj} to")
+        return prompts
 
 class RealTargetingEngine:
     def __init__(self, model_name="gpt2"):
@@ -46,13 +58,15 @@ class RealTargetingEngine:
         for (l, h), profiles in head_stats.items():
             all_entropies = np.concatenate(profiles)
             var_h = float(np.var(all_entropies))
+            mean_h = float(np.mean(all_entropies))
             collapses = 0
             for profile in profiles:
                 diffs = np.diff(profile)
                 collapses += int(np.sum(diffs < -0.2))
 
-            results[(l, h)] = {
+            results[f"{l}.{h}"] = {
                 "var_h": var_h,
+                "mean_h": mean_h,
                 "collapses": collapses,
                 "is_genuine": var_h > PrecisionConstants.GENUINE_DIFFUSE_VAR_H and collapses >= PrecisionConstants.GENUINE_DIFFUSE_COLLAPSES
             }
@@ -74,7 +88,7 @@ class KaggleFullPipeline:
         subprocess.run(["cp", "precision_targeting_engine.py", data_dir])
         return data_dir
 
-    def prepare_notebook(self, use_gpu=True):
+    def prepare_notebook(self, use_gpu=True, model_name="gpt2-xl"):
         kernel_dir = os.path.join(self.work_dir, "kernel")
         os.makedirs(kernel_dir, exist_ok=True)
 
@@ -83,48 +97,32 @@ import os
 import sys
 import subprocess
 import glob
+import json
 
 print("--- System Check ---")
-print(f"Current Directory: {{os.getcwd()}}")
-
-# Search for the engine file
 engine_files = glob.glob("/kaggle/input/**/precision_targeting_engine.py", recursive=True)
 if engine_files:
-    engine_path = os.path.dirname(engine_files[0])
-    print(f"Adding engine path to sys.path: {{engine_path}}")
-    sys.path.append(engine_path)
-else:
-    print("WARNING: precision_targeting_engine.py not found yet. Listing /kaggle/input:")
-    for root, dirs, files in os.walk("/kaggle/input"):
-        for file in files:
-            if file == "precision_targeting_engine.py":
-                print(f"Found it at: {{root}}")
-                sys.path.append(root)
+    sys.path.append(os.path.dirname(engine_files[0]))
 
 print("--- Installing dependencies ---")
-# Try installing transformer-lens without strict versioning
 subprocess.run(["pip", "install", "transformer-lens", "jaxtyping", "beartype", "fancy_einsum", "einops", "--quiet"])
 
-import torch
-import numpy
-print(f"Numpy Version: {{numpy.__version__}}")
+from precision_targeting_engine import RealTargetingEngine, PromptGenerator
 
 try:
-    from precision_targeting_engine import RealTargetingEngine
-    print("--- Engine Imported Successfully ---")
+    engine = RealTargetingEngine("{model_name}")
+    print(f"--- Loaded {{engine.model.cfg.n_layers}} Layers ---")
 
-    print(f"CUDA Available: {{torch.cuda.is_available()}}")
-    engine = RealTargetingEngine("gpt2")
-    prompts = ["John and Mary went to the store. John gave the apple to"]
+    prompts = PromptGenerator.generate_ioi(50)
+    print(f"Scanning with {{len(prompts)}} IOI prompts...")
+
     genuine_heads, stats = engine.find_genuine_heads(prompts)
-
     print(f"Found {{len(genuine_heads)}} genuine heads.")
+
     with open("benchmark_results.json", "w") as f:
-        import json
-        json.dump({{"genuine_heads": [str(h) for h in genuine_heads]}}, f)
+        json.dump({{"model": "{model_name}", "genuine_heads": genuine_heads, "full_stats": stats}}, f)
 
 except Exception as e:
-    print(f"--- Error during execution: {{e}} ---")
     import traceback
     traceback.print_exc()
 """
@@ -149,5 +147,5 @@ except Exception as e:
 if __name__ == "__main__":
     p = KaggleFullPipeline()
     p.prepare_dataset()
-    p.prepare_notebook()
-    print("Prepared assets v5 in kaggle_deploy/")
+    p.prepare_notebook(model_name="gpt2-xl")
+    print("Prepared high-fidelity assets (GPT2-XL) in kaggle_deploy/")
