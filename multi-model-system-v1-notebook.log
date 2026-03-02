@@ -1,0 +1,71 @@
+[{"stream_name":"stdout","time":5.475239609,"data":"--- Initializing Multi-Model System ---\n"}
+,{"stream_name":"stdout","time":5.483572175,"data":"--- Installing dependencies ---\n"}
+,{"stream_name":"stdout","time":8.582861352,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 3.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":10.463894962,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.0/44.0 kB 2.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.013155845,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 195.2/195.2 kB 10.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.036276977,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 kB 4.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.075788444,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 739.7/739.7 kB 27.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.15279388,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 33.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.339068969,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.0/18.0 MB 84.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":11.455187845,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 108.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":29.564988971,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":29.565034901,"data":"bigframes 2.31.0 requires google-cloud-bigquery-storage\u003c3.0.0,\u003e=2.30.0, which is not installed.\n"}
+,{"stream_name":"stderr","time":29.565041999,"data":"cesium 0.12.4 requires numpy\u003c3.0,\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.56504713,"data":"kaggle-environments 1.27.0 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565052059,"data":"google-colab 1.0.0 requires jupyter-server==2.14.0, but you have jupyter-server 2.12.5 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565057077,"data":"google-colab 1.0.0 requires pandas==2.2.2, but you have pandas 2.3.3 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565063377,"data":"dopamine-rl 4.1.2 requires gym\u003c=0.25.2, but you have gym 0.26.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565066788,"data":"jaxlib 0.7.2 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565070189,"data":"opencv-contrib-python 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565073939,"data":"opencv-python 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565077289,"data":"shap 0.50.0 requires numpy\u003e=2, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565080399,"data":"jax 0.7.2 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565096319,"data":"rasterio 1.5.0 requires numpy\u003e=2, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.56510066,"data":"tobler 0.13.0 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565106033,"data":"plum-dispatch 2.6.1 requires beartype\u003e=0.16.2, but you have beartype 0.14.1 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565110159,"data":"opencv-python-headless 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":29.565114925,"data":"pytensor 2.36.3 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stdout","time":29.713569325,"data":"Targeting: mistral-ai/mistral/pytorch/7b-v0.1/1\n"}
+,{"stream_name":"stderr","time":31.367750769,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":31.368107743,"data":"  File \"/kaggle/src/script.py\", line 22, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368122267,"data":"    engine = RealTargetingEngine(target)\n"}
+,{"stream_name":"stderr","time":31.368126819,"data":"             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":31.368131016,"data":"  File \"/kaggle/input/datasets/hichambedrani/multi-model-system-v1-data/precision_targeting_engine.py\", line 35, in __init__\n"}
+,{"stream_name":"stderr","time":31.368135735,"data":"    from transformer_lens import HookedTransformer\n"}
+,{"stream_name":"stderr","time":31.368140076,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformer_lens/__init__.py\", line 1, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368145434,"data":"    from . import hook_points\n"}
+,{"stream_name":"stderr","time":31.368149298,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformer_lens/hook_points.py\", line 20, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368153401,"data":"    from transformer_lens.utils import Slice, SliceInput\n"}
+,{"stream_name":"stderr","time":31.368157279,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformer_lens/utils.py\", line 25, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368161556,"data":"    from datasets.arrow_dataset import Dataset\n"}
+,{"stream_name":"stderr","time":31.368165379,"data":"  File \"/usr/local/lib/python3.12/dist-packages/datasets/__init__.py\", line 17, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368169901,"data":"    from .arrow_dataset import Column, Dataset\n"}
+,{"stream_name":"stderr","time":31.368173959,"data":"  File \"/usr/local/lib/python3.12/dist-packages/datasets/arrow_dataset.py\", line 58, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368178099,"data":"    import pandas as pd\n"}
+,{"stream_name":"stderr","time":31.368182231,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/__init__.py\", line 37, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368186921,"data":"    from pandas._config import (\n"}
+,{"stream_name":"stderr","time":31.368191194,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/_config/__init__.py\", line 20, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368195457,"data":"    from pandas._config import config\n"}
+,{"stream_name":"stderr","time":31.368199673,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/_config/config.py\", line 68, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.36820353,"data":"    from pandas._typing import (\n"}
+,{"stream_name":"stderr","time":31.3682201,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/_typing.py\", line 198, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368223307,"data":"    np.random.Generator,\n"}
+,{"stream_name":"stderr","time":31.368225556,"data":"    ^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":31.368227776,"data":"  File \"/usr/local/lib/python3.12/dist-packages/numpy/__init__.py\", line 337, in __getattr__\n"}
+,{"stream_name":"stderr","time":31.368230312,"data":"    public_symbols = globals().keys() | {'testing'}\n"}
+,{"stream_name":"stderr","time":31.368232596,"data":"        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":31.368238422,"data":"  File \"/usr/local/lib/python3.12/dist-packages/numpy/random/__init__.py\", line 180, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.36824411,"data":"    from . import _pickle\n"}
+,{"stream_name":"stderr","time":31.368247748,"data":"  File \"/usr/local/lib/python3.12/dist-packages/numpy/random/_pickle.py\", line 1, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":31.368252036,"data":"    from .mtrand import RandomState\n"}
+,{"stream_name":"stderr","time":31.368255954,"data":"  File \"numpy/random/mtrand.pyx\", line 1, in init numpy.random.mtrand\n"}
+,{"stream_name":"stderr","time":31.368260638,"data":"ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject\n"}
+,{"stream_name":"stderr","time":34.309914749,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":34.309980729,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":34.545501241,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":34.545528991,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":35.117542426,"data":"/usr/local/lib/python3.12/dist-packages/traitlets/traitlets.py:2915: FutureWarning: --Exporter.preprocessors=[\"nbconvert.preprocessors.ExtractOutputPreprocessor\"] for containers is deprecated in traitlets 5.0. You can pass `--Exporter.preprocessors item` ... multiple times to add items to a list.\n"}
+,{"stream_name":"stderr","time":35.117590009,"data":"  warn(\n"}
+,{"stream_name":"stderr","time":35.150015477,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":36.352137379,"data":"[NbConvertApp] Writing 278620 bytes to __results__.html\n"}
+]

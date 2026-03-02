@@ -1,0 +1,30 @@
+[{"stream_name":"stdout","time":0.765912783,"data":"--- System Check: V3 Production ---\n"}
+,{"stream_name":"stdout","time":0.771169948,"data":"Engine path: /kaggle/input/datasets/hichambedrani/precision-system-v3-data\n"}
+,{"stream_name":"stdout","time":0.771189777,"data":"--- Installing dependencies ---\n"}
+,{"stream_name":"stdout","time":4.160262445,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.7/43.7 kB 2.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":4.722013586,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 4.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.949568564,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.4/40.4 kB 2.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":8.877006116,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.7/57.7 kB 4.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":9.74748382,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.5/79.5 kB 4.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":10.586876788,"data":"ERROR: Cannot install torch==2.4.0 and transformer-lens==2.17.0 because these package versions have conflicting dependencies.\n"}
+,{"stream_name":"stderr","time":10.587290349,"data":"ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts\n"}
+,{"stream_name":"stdout","time":14.78291617,"data":"--- Running Production Pipeline on gpt2-xl ---\n"}
+,{"stream_name":"stderr","time":14.783228516,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":14.783424879,"data":"  File \"/kaggle/src/script.py\", line 19, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":14.783435642,"data":"    results = run_full_pipeline(target)\n"}
+,{"stream_name":"stderr","time":14.783440424,"data":"              ^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":14.783444872,"data":"  File \"/kaggle/input/datasets/hichambedrani/precision-system-v3-data/precision_targeting_engine.py\", line 152, in run_full_pipeline\n"}
+,{"stream_name":"stderr","time":14.783449855,"data":"    engine = RealTargetingEngine(model_name)\n"}
+,{"stream_name":"stderr","time":14.783454663,"data":"             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":14.783459232,"data":"  File \"/kaggle/input/datasets/hichambedrani/precision-system-v3-data/precision_targeting_engine.py\", line 77, in __init__\n"}
+,{"stream_name":"stderr","time":14.783464401,"data":"    from transformer_lens import HookedTransformer\n"}
+,{"stream_name":"stderr","time":14.78346975,"data":"ModuleNotFoundError: No module named 'transformer_lens'\n"}
+,{"stream_name":"stderr","time":17.698029084,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":17.69806765,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":17.948524399,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":17.948550067,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":18.503558712,"data":"/usr/local/lib/python3.12/dist-packages/traitlets/traitlets.py:2915: FutureWarning: --Exporter.preprocessors=[\"nbconvert.preprocessors.ExtractOutputPreprocessor\"] for containers is deprecated in traitlets 5.0. You can pass `--Exporter.preprocessors item` ... multiple times to add items to a list.\n"}
+,{"stream_name":"stderr","time":18.503625437,"data":"  warn(\n"}
+,{"stream_name":"stderr","time":18.537128783,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":19.729920985,"data":"[NbConvertApp] Writing 278574 bytes to __results__.html\n"}
+]
