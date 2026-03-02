@@ -1,0 +1,41 @@
+[{"stream_name":"stdout","time":0.725905346,"data":"--- Initializing Genuineness Benchmark Environment ---\n"}
+,{"stream_name":"stdout","time":4.259373415,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 3.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":6.642500633,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.0/44.0 kB 3.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.174057681,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 195.2/195.2 kB 9.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.383129668,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.0/18.0 MB 75.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.417627814,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 kB 4.8 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.447205349,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 739.7/739.7 kB 48.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.51681192,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 40.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.682481796,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 75.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":25.349069104,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":25.349120964,"data":"bigframes 2.31.0 requires google-cloud-bigquery-storage\u003c3.0.0,\u003e=2.30.0, which is not installed.\n"}
+,{"stream_name":"stderr","time":25.349126367,"data":"cesium 0.12.4 requires numpy\u003c3.0,\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349130481,"data":"kaggle-environments 1.27.0 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349133859,"data":"google-colab 1.0.0 requires jupyter-server==2.14.0, but you have jupyter-server 2.12.5 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349137141,"data":"google-colab 1.0.0 requires pandas==2.2.2, but you have pandas 2.3.3 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349140339,"data":"dopamine-rl 4.1.2 requires gym\u003c=0.25.2, but you have gym 0.26.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349143656,"data":"jaxlib 0.7.2 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349147042,"data":"opencv-contrib-python 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349150615,"data":"opencv-python 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349154046,"data":"shap 0.50.0 requires numpy\u003e=2, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349157278,"data":"jax 0.7.2 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349170239,"data":"rasterio 1.5.0 requires numpy\u003e=2, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349173036,"data":"tobler 0.13.0 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349175471,"data":"plum-dispatch 2.6.1 requires beartype\u003e=0.16.2, but you have beartype 0.14.1 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349177911,"data":"opencv-python-headless 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":25.349180486,"data":"pytensor 2.36.3 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stdout","time":29.090036248,"data":"SDK not found. Note: This script must be run in a 'Benchmark Task' environment.\n"}
+,{"stream_name":"stderr","time":29.090081483,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":29.090088951,"data":"  File \"/kaggle/src/script.py\", line 131, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":29.090265914,"data":"    if HAS_KBENCH:\n"}
+,{"stream_name":"stderr","time":29.090286962,"data":"       ^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":29.090385887,"data":"NameError: name 'HAS_KBENCH' is not defined\n"}
+,{"stream_name":"stderr","time":32.018946017,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":32.018973204,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":32.250355685,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":32.250381492,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":32.805547858,"data":"/usr/local/lib/python3.12/dist-packages/traitlets/traitlets.py:2915: FutureWarning: --Exporter.preprocessors=[\"nbconvert.preprocessors.ExtractOutputPreprocessor\"] for containers is deprecated in traitlets 5.0. You can pass `--Exporter.preprocessors item` ... multiple times to add items to a list.\n"}
+,{"stream_name":"stderr","time":32.805582994,"data":"  warn(\n"}
+,{"stream_name":"stderr","time":32.840438524,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":34.02359614,"data":"[NbConvertApp] Writing 296683 bytes to __results__.html\n"}
+]
