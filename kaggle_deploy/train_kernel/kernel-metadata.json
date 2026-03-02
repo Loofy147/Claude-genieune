@@ -1,0 +1,13 @@
+{
+  "id": "hichambedrani/train-genuine-transformer",
+  "title": "Train Genuine Transformer",
+  "code_file": "train_run.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "true",
+  "dataset_sources": [
+    "hichambedrani/genuine-model-source"
+  ]
+}
