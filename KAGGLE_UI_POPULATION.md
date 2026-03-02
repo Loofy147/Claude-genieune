@@ -1,35 +1,35 @@
-# FINAL STEP: Populating the Kaggle Benchmark
+# FINAL STEP: Populating the Genuineness Benchmark
 
-Follow these manual steps to ensure your tasks appear in the Benchmark UI. The Kaggle CLI can push the code, but the final registration requires a UI action.
+This guide includes the latest SOTA models available via the Kaggle Benchmarks SDK (Claude 4.6, Gemini 3, Gemma 3, DeepSeek v3.2).
 
 ## 1. Register the Tasks on Kaggle
 1. Go to [kaggle.com/benchmarks](https://www.kaggle.com/benchmarks).
-2. Click **"Create task"** (Blue button, top right).
-3. In the Notebook Editor:
-   - **Paste the entire contents of** `genuineness_benchmark_production.py` into the first cell.
-   - Click **"Save Version"** (top right) and wait for the run to complete.
-   - **CRITICAL STEP**: After the version is saved, look at the top right of the editor or the Task Detail page. Click the **"Save Task"** button. This is what makes the tasks visible to your benchmark collection.
+2. Click **"Create task"**.
+3. Paste the entire contents of `genuineness_benchmark_production.py`.
+4. Click **"Save Version"**.
+5. After saving, click the **"Save Task"** button on the Task Detail page.
 
-## 2. Populate the Benchmark Collection
-1. Select **"Create benchmark"** on the [benchmarks home page](https://www.kaggle.com/benchmarks).
-2. **Name:** `Genuineness Benchmark: Reasoning vs Pattern Completion`
-3. **URL Slug:** `genuineness-benchmark`
-4. **Description:** `A mechanistic suite identifying "genuine computation" heads in transformer architectures. It uses entropy variance and ablation to differentiate between dynamic reasoning and static retrieval.`
-5. Click **"Add tasks"** and select the 5 tasks from your registered notebook:
-   - `IOI Reasoning Accuracy`
-   - `Genuine Head Density`
-   - `Task Separation Score`
-   - `Ablation Causal Impact`
-   - `Output Genuineness Score`
+## 2. Assemble the Benchmark
+1. Create a new benchmark named `Genuineness Benchmark: Global Reasoning Leaderboard`.
+2. Add these tasks from your notebook:
+   - `IOI Reasoning Accuracy` (Behavioral)
+   - `Genuine Head Density` (Mechanistic - Open Weights only)
+   - `Output Genuineness Score` (Behavioral)
 
-## 3. Add Models to the Leaderboard
-Click **"Add models"** and choose these recommended targets:
-- `gpt2-xl`
+## 3. Recommended Models to Compare
+Add these to the leaderboard to compare API-only vs Open-weights performance:
+
+### API-Only (Behavioral Tasks)
+- `anthropic/claude-opus-4-6@default`
+- `anthropic/claude-sonnet-4-6@default`
+- `google/gemini-3.1-pro-preview`
+- `deepseek-ai/deepseek-v3.2`
+
+### Open Weights (Mechanistic + Behavioral)
+- `google/gemma-3-27b`
+- `qwen/qwen3-next-80b-a3b-thinking`
 - `meta-llama/Llama-3-8B`
-- `mistralai/Mistral-7B-v0.1`
-- `google/gemma-7b`
 
-## Troubleshooting "Tasks Not Found"
-- Ensure you clicked **"Save Task"** in the UI, not just "Save Version".
-- Verify the notebook has **GPU** enabled in the right-hand settings panel before saving.
-- Check that the notebook is **Public** or that you have permission to add its tasks to your benchmark.
+## 4. Understanding the 'Dual-Mode' Results
+- **API Models**: Will score 0.0 or N/A on "Genuine Head Density" because their weights are not accessible for TransformerLens. Their "genuineness" is measured purely via Task 1 and 5.
+- **Open Models**: Provide the full picture, showing if high accuracy (Task 1) correlates with actual physical reasoning circuits (Task 2).
