@@ -1,0 +1,15 @@
+{
+  "title": "Precision Targeting Rapport",
+  "timestamp": "2026-03-01T22:21:12.376013",
+  "status": "SUCCESS",
+  "metrics": {
+    "heads_identified": 38,
+    "ioi_drop": 0.8,
+    "k_ratio": 1.52
+  },
+  "recommendations": [
+    "Amplify genuine heads in layers 21-32 to counteract pattern pull.",
+    "Implement real-time 'STOP' signals when elaboration pull score > 0.4.",
+    "Protect reasoning circuits during long-context generation to maintain genuineness."
+  ]
+}

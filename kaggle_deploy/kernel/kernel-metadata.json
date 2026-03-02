@@ -1,0 +1,13 @@
+{
+  "id": "hichambedrani/enhanced-precision-system-notebook",
+  "title": "enhanced-precision-system-notebook",
+  "code_file": "benchmark_run.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "true",
+  "dataset_sources": [
+    "hichambedrani/enhanced-precision-system-data"
+  ]
+}

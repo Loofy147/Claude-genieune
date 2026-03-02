@@ -1,0 +1,11 @@
+{
+  "title": "Actual LLM Precision Targeting Rapport",
+  "timestamp": "2026-03-01T22:30:00Z",
+  "status": "READY_FOR_KAGGLE",
+  "hardware": "NVIDIA T4 GPU",
+  "recommendations": [
+    "Use Llama-3-8B as the target for the first actual scan.",
+    "Enable GPU in Kaggle Kernels to handle HookedTransformer memory requirements.",
+    "Verify k_recover/k_degrade constants on Llama-3 weights via the ablation hook."
+  ]
+}

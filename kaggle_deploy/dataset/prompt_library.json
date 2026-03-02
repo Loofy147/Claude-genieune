@@ -1,0 +1,12 @@
+{
+  "ioi": [
+    "John and Mary went to the library. John gave the apple to",
+    "Alice and Bob went to the library. Alice gave the key to"
+  ],
+  "syllogism": [
+    "Some A are B. All B are C. Therefore, some A are"
+  ],
+  "counterfactual": [
+    "In a world where gravity pushes up, Alice drops a ball. The ball will"
+  ]
+}

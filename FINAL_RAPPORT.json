@@ -1,0 +1,20 @@
+{
+  "title": "Precision Targeting Report: gpt2-xl",
+  "timestamp": "2026-03-02T00:33:01.227485",
+  "summary": {
+    "total_heads_scanned": 1200,
+    "genuine_heads_found": 0,
+    "target_range_scanned": "Layers 21-32 (and beyond)"
+  },
+  "findings": [
+    "Scanned 1200 attention heads across 48 layers.",
+    "Identified 0 reasoning circuits meeting GENUINE_DIFFUSE criteria.",
+    "Observed highest average entropy variance in layers [1, 2, 3]."
+  ],
+  "recommendations": [
+    "Target identified heads in layers 21-32 for mean ablation to confirm causal reasoning necessity.",
+    "Protect late-layer heads with high variance (>0.12) to maintain response genuineness.",
+    "Deploy the Real-Time Monitor with a 'STOP' threshold of 0.4 on detected elaboration pulls."
+  ],
+  "top_genuine_heads": []
+}

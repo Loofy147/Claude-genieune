@@ -1,0 +1,51 @@
+[{"stream_name":"stdout","time":0.775103925,"data":"--- System Check ---\n"}
+,{"stream_name":"stdout","time":0.780529073,"data":"--- Installing dependencies ---\n"}
+,{"stream_name":"stdout","time":5.34346895,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 5.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.406936074,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.0/44.0 kB 3.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.909783466,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 195.2/195.2 kB 15.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.923997375,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 kB 5.4 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.946262102,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 739.7/739.7 kB 44.8 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":7.990304643,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 40.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":8.139709874,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.0/18.0 MB 94.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":8.244756091,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 116.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":26.306885885,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":26.306928645,"data":"bigframes 2.31.0 requires google-cloud-bigquery-storage\u003c3.0.0,\u003e=2.30.0, which is not installed.\n"}
+,{"stream_name":"stderr","time":26.306934787,"data":"cesium 0.12.4 requires numpy\u003c3.0,\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306939532,"data":"kaggle-environments 1.27.0 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306944386,"data":"google-colab 1.0.0 requires jupyter-server==2.14.0, but you have jupyter-server 2.12.5 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306949031,"data":"google-colab 1.0.0 requires pandas==2.2.2, but you have pandas 2.3.3 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306954159,"data":"dopamine-rl 4.1.2 requires gym\u003c=0.25.2, but you have gym 0.26.2 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306958917,"data":"jaxlib 0.7.2 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306963448,"data":"opencv-contrib-python 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.30697823,"data":"opencv-python 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306983375,"data":"shap 0.50.0 requires numpy\u003e=2, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.306988021,"data":"jax 0.7.2 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.307005353,"data":"rasterio 1.5.0 requires numpy\u003e=2, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.30700882,"data":"tobler 0.13.0 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.3070124,"data":"plum-dispatch 2.6.1 requires beartype\u003e=0.16.2, but you have beartype 0.14.1 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.307015925,"data":"opencv-python-headless 4.12.0.88 requires numpy\u003c2.3.0,\u003e=2; python_version \u003e= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":26.307019702,"data":"pytensor 2.36.3 requires numpy\u003e=2.0, but you have numpy 1.26.4 which is incompatible.\n"}
+,{"stream_name":"stderr","time":43.052563409,"data":"2026-03-02 00:29:22.822170: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered\n"}
+,{"stream_name":"stderr","time":43.271438335,"data":"WARNING: All log messages before absl::InitializeLog() is called are written to STDERR\n"}
+,{"stream_name":"stderr","time":43.271472878,"data":"E0000 00:00:1772411363.041032       7 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered\n"}
+,{"stream_name":"stderr","time":43.326683696,"data":"E0000 00:00:1772411363.096302       7 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered\n"}
+,{"stream_name":"stderr","time":43.814482814,"data":"W0000 00:00:1772411363.584106       7 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.\n"}
+,{"stream_name":"stderr","time":43.814516549,"data":"W0000 00:00:1772411363.584156       7 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.\n"}
+,{"stream_name":"stderr","time":43.814522739,"data":"W0000 00:00:1772411363.584160       7 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.\n"}
+,{"stream_name":"stderr","time":43.814529877,"data":"W0000 00:00:1772411363.584163       7 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.\n"}
+,{"stream_name":"stdout","time":63.000360962,"data":"[ENGINE] Loading gpt2-xl...\n"}
+,{"stream_name":"stderr","time":63.8932098,"data":"`torch_dtype` is deprecated! Use `dtype` instead!\n"}
+,{"stream_name":"stdout","time":99.630430723,"data":"Loaded pretrained model gpt2-xl into HookedTransformer\n"}
+,{"stream_name":"stdout","time":99.630488178,"data":"Moving model to device:  cuda\n"}
+,{"stream_name":"stdout","time":99.636217852,"data":"--- Loaded 48 Layers ---\n"}
+,{"stream_name":"stdout","time":99.63623743,"data":"Scanning with 50 IOI prompts...\n"}
+,{"stream_name":"stdout","time":117.313857225,"data":"Found 0 genuine heads.\n"}
+,{"stream_name":"stderr","time":121.725540788,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":121.725570169,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":121.930457223,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":121.930484497,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":122.517121456,"data":"/usr/local/lib/python3.12/dist-packages/traitlets/traitlets.py:2915: FutureWarning: --Exporter.preprocessors=[\"nbconvert.preprocessors.ExtractOutputPreprocessor\"] for containers is deprecated in traitlets 5.0. You can pass `--Exporter.preprocessors item` ... multiple times to add items to a list.\n"}
+,{"stream_name":"stderr","time":122.517149032,"data":"  warn(\n"}
+,{"stream_name":"stderr","time":122.544569519,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":123.320584017,"data":"[NbConvertApp] Writing 278113 bytes to __results__.html\n"}
+]
