@@ -15,16 +15,12 @@ class GenuineAttentionHead(nn.Module):
         self.current_entropy = None
 
     def forward(self, x, mask=None):
-        # x: (batch, seq, d_model)
-        q = self.q(x) # (b, t, d_head)
-        k = self.k(x) # (b, t, d_head)
-        v = self.v(x) # (b, t, d_head)
+        q = self.q(x)
+        k = self.k(x)
+        v = self.v(x)
 
         scores = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(self.d_head)
         if mask is not None:
-            # BROADCAST FIX: ensure mask is compatible with scores (b, t, t)
-            # scores: (b, t, t), mask: (1, 1, t, t) -> (b, t, t)
-            # mask.squeeze(1) gives (1, t, t) which broadcasts correctly with (b, t, t)
             m = mask.squeeze(1) if mask.dim() == 4 else mask
             scores = scores.masked_fill(m == 0, -1e9)
 
@@ -32,7 +28,8 @@ class GenuineAttentionHead(nn.Module):
 
         with torch.no_grad():
             eps = 1e-10
-            h = -torch.sum(attn_weights * torch.log(attn_weights + eps), dim=-1)
+            t = attn_weights.size(-1)
+            h = -torch.sum(attn_weights * torch.log(attn_weights + eps), dim=-1) / math.log(t)
             self.current_entropy = h
 
         attn_weights = self.dropout(attn_weights)
@@ -75,7 +72,6 @@ class GenuineTransformer(nn.Module):
 
     def forward(self, tokens, labels=None):
         b, t = tokens.size()
-        # mask: (1, 1, t, t)
         mask = torch.tril(torch.ones((t, t), device=tokens.device)).view(1, 1, t, t)
         x = self.token_emb(tokens) + self.pos_emb[:, :t, :]
         x = self.dropout(x)
@@ -98,14 +94,16 @@ def compute_genuineness_regularization(model, lambda_var=0.1, lambda_col=0.05):
             var_h = torch.var(head.current_entropy, dim=-1).mean()
             total_var += var_h
             diffs = head.current_entropy[:, 1:] - head.current_entropy[:, :-1]
-            collapses = torch.relu(-diffs - 0.1).sum(dim=-1).mean()
+            std_h = torch.std(head.current_entropy, dim=-1).mean()
+            threshold = 0.5 * std_h + 0.05
+            collapses = torch.relu(-diffs - threshold).sum(dim=-1).mean()
             total_col += collapses
             head_count += 1
     if head_count == 0: return torch.tensor(0.0, device=model.pos_emb.device)
     return -(lambda_var * (total_var / head_count) + lambda_col * (total_col / head_count))
 
 if __name__ == "__main__":
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cpu"
     model = GenuineTransformer(vocab_size=1000).to(device)
     x = torch.randint(0, 1000, (2, 32)).to(device)
     logits, loss = model(x, labels=x)

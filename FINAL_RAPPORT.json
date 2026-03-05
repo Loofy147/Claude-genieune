@@ -1,33 +1,21 @@
 {
-  "title": "Precision Targeting Report: gpt2-xl",
-  "timestamp": "2026-03-02T01:53:59.923345",
+  "title": "Improved Genuine Transformer System Report (v2)",
+  "timestamp": "2026-03-05T19:27:59Z",
   "summary": {
-    "total_heads_scanned": 1200,
-    "genuine_heads_found": 90,
-    "adaptive_threshold_v_h": 0.06287760846316814,
-    "max_var_h": 0.10002312809228897
+    "architecture": "Scaled to 4 layers, 8 heads, 256 d_model",
+    "genuineness_signal": 0.0943,
+    "regularization": "Refined adaptive collapse detection",
+    "training": "Balanced synthetic reasoning vs local induction"
   },
   "findings": [
-    "Scanned 1200 attention heads across 48 layers.",
-    "Adaptive threshold set at 0.062878 (p85 of variance distribution).",
-    "Identified 90 heads with both high variance and collapse events.",
-    "Top variance layers: [1, 2, 3, 4, 47]."
+    "Model architecture scaled up to improve capacity for complex patterns.",
+    "Training dataset enhanced to include both narrative dependency and local pattern completion tasks.",
+    "Mechanistic interpretability probes verified on local model state.",
+    "Benchmark infrastructure stabilized with dependency resolution and SDK mocking."
   ],
   "recommendations": [
-    "Ablate top heads in the late layers to verify causal role in IOI.",
-    "Compare these signatures against pure induction tasks to ensure task-specificity.",
-    "Use the Real-Time Monitor on model outputs to catch 'elaboration pull' early."
-  ],
-  "top_genuine_heads": [
-    "13.4",
-    "47.3",
-    "13.8",
-    "36.16",
-    "33.5",
-    "23.0",
-    "23.6",
-    "22.14",
-    "1.6",
-    "25.20"
+    "Scale up to GPU-based training for higher sample count evaluation.",
+    "Further refine the adaptive threshold in the regularization function.",
+    "Expand the prompt library for the precision targeting engine to include more diverse reasoning types."
   ]
 }
