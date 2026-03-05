@@ -2,7 +2,7 @@ import os, json, subprocess
 from precision_targeting_engine import KaggleFullPipeline
 
 def deploy():
-    os.environ["KAGGLE_API_TOKEN"] = "KGAT_7972aa3c1ae3f10a452943afc4b51193"
+    os.environ["KAGGLE_API_TOKEN"] = "KGAT_f33ce61ce9457fdb7fff7184414403ac"
     pipeline = KaggleFullPipeline(username="hichambedrani")
 
     dataset_dir = pipeline.prepare_dataset()
