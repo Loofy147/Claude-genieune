@@ -1,11 +1,13 @@
 import os, json, subprocess
 
 def deploy_training():
-    os.environ["KAGGLE_API_TOKEN"] = "KGAT_f33ce61ce9457fdb7fff7184414403ac"
+    # Credentials should be set in the environment before running this script
+    if not os.environ.get("KAGGLE_API_TOKEN"):
+        print("Warning: KAGGLE_API_TOKEN not set in the environment.")
 
     # Update Dataset
     data_dir = "kaggle_deploy/genuine_model_data"
-    subprocess.run(["kaggle", "datasets", "version", "-p", data_dir, "-m", "Path fix"])
+    subprocess.run(["kaggle", "datasets", "version", "-p", data_dir, "-m", "Extended training run"])
 
     # Update Kernel
     kernel_dir = "kaggle_deploy/train_kernel"

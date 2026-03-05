@@ -2,14 +2,16 @@ import os, sys, subprocess, glob, json
 from datetime import datetime
 
 print("--- System Check: V3 Production ---")
+# HUGGING_FACE_HUB_TOKEN is expected to be passed via the environment (e.g., Kaggle Secrets)
+
 engine_files = glob.glob("/kaggle/input/**/precision_targeting_engine.py", recursive=True)
 if engine_files:
     sys.path.append(os.path.dirname(engine_files[0]))
     print(f"Engine path: {os.path.dirname(engine_files[0])}")
 
 print("--- Installing dependencies ---")
-# Final production dependency set
-subprocess.run(["pip", "install", "torch==2.4.0", "transformers==4.44.0", "numpy==1.26.4", "transformer-lens==2.17.0", "einops", "--quiet", "--force-reinstall"])
+# Fully relaxed dependency set to avoid resolution conflicts
+subprocess.run(["pip", "install", "transformer-lens", "transformers", "torch", "einops", "--quiet"])
 
 from precision_targeting_engine import run_full_pipeline
 
