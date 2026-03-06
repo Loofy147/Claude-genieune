@@ -28,16 +28,38 @@ except ImportError:
             return decorator
 
 # 3. Genuineness Metrics Definition
-def compute_head_entropy_fixed(head_pattern):
-    seq_len = head_pattern.shape[0]
-    entropies = []
-    for pos in range(seq_len):
-        row = head_pattern[pos]
-        max_h = math.log2(pos + 1) if pos > 0 else 1e-10
-        row = np.maximum(row, 1e-10)
-        h = -np.sum(row * np.log2(row / row.sum()))
-        entropies.append(float(np.clip(h / max_h, 0, 1)))
-    return np.array(entropies[int(seq_len * 0.6):])
+def compute_head_entropy_fixed(head_patterns):
+    """Vectorized calculation of head entropy (BUG 1 FIX: Per-position normalization)."""
+    # Ensure input is 3D (n_heads, seq_len, seq_len)
+    is_2d = False
+    if head_patterns.ndim == 2:
+        head_patterns = head_patterns[np.newaxis, ...]
+        is_2d = True
+
+    n_heads, seq_len, _ = head_patterns.shape
+
+    # Pre-calculate log2(pos+1) for all positions
+    pos_indices = np.arange(seq_len)
+    max_h = np.maximum(np.log2(pos_indices + 1), 1e-10)
+
+    # Small epsilon to avoid log(0)
+    eps = 1e-10
+
+    # row = row / row.sum()
+    row_sums = np.maximum(head_patterns.sum(axis=-1, keepdims=True), eps)
+    norm_pattern = np.maximum(head_patterns, eps) / row_sums
+
+    # h_val = -np.sum(row * np.log2(row))
+    h_vals = -np.sum(norm_pattern * np.log2(norm_pattern), axis=-1)
+
+    # entropies = np.clip(h_val / max_h, 0, 1)
+    # Broadcast max_h across heads
+    entropies = np.clip(h_vals / max_h, 0, 1)
+
+    start = int(seq_len * 0.60)
+    result = entropies[:, start:] if start < seq_len else entropies
+
+    return result[0] if is_2d else result
 
 # 4. Benchmark Tasks
 @kbench.task(name="IOI Reasoning Accuracy")
