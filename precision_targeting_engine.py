@@ -53,22 +53,41 @@ class PromptGenerator:
         ]
         return [base_patterns[i % len(base_patterns)] for i in range(n)]
 
-def compute_head_entropy_fixed(head_pattern_tensor, use_late_positions_only=True):
-    """BUG 1 FIX: Per-position normalization by log2(pos+1)."""
-    seq_len = head_pattern_tensor.shape[0]
-    entropies = []
-    for pos in range(seq_len):
-        row = head_pattern_tensor[pos]
-        max_h = math.log2(pos + 1) if pos > 0 else 1e-10
-        row = np.maximum(row, 1e-10)
-        row = row / row.sum()
-        h_val = -np.sum(row * np.log2(row))
-        entropies.append(float(np.clip(h_val / max_h, 0, 1)))
+def compute_head_entropy_fixed(head_patterns, use_late_positions_only=True):
+    """Vectorized calculation of head entropy (BUG 1 FIX: Per-position normalization)."""
+    # Ensure input is 3D (n_heads, seq_len, seq_len)
+    is_2d = False
+    if head_patterns.ndim == 2:
+        head_patterns = head_patterns[np.newaxis, ...]
+        is_2d = True
+
+    n_heads, seq_len, _ = head_patterns.shape
+
+    # Pre-calculate log2(pos+1) for all positions
+    pos_indices = np.arange(seq_len)
+    max_h = np.maximum(np.log2(pos_indices + 1), 1e-10)
+
+    # Small epsilon to avoid log(0)
+    eps = 1e-10
+
+    # row = row / row.sum()
+    row_sums = np.maximum(head_patterns.sum(axis=-1, keepdims=True), eps)
+    norm_pattern = np.maximum(head_patterns, eps) / row_sums
+
+    # h_val = -np.sum(row * np.log2(row))
+    h_vals = -np.sum(norm_pattern * np.log2(norm_pattern), axis=-1)
+
+    # entropies = np.clip(h_val / max_h, 0, 1)
+    # Broadcast max_h across heads
+    entropies = np.clip(h_vals / max_h, 0, 1)
 
     if use_late_positions_only:
         start = int(seq_len * 0.60)
-        return np.array(entropies[start:]) if start < seq_len else np.array(entropies)
-    return np.array(entropies)
+        result = entropies[:, start:] if start < seq_len else entropies
+    else:
+        result = entropies
+
+    return result[0] if is_2d else result
 
 def detect_collapses(entropy_profile, threshold=-0.10):
     """BUG 4 FIX: Adaptive threshold."""
@@ -100,10 +119,11 @@ class RealTargetingEngine:
                 _, cache = self.model.run_with_cache(tokens)
                 for l in range(self.model.cfg.n_layers):
                     pattern = cache[f"blocks.{l}.attn.hook_pattern"][0]
+                    # Vectorized: compute entropy for all heads in the layer at once
+                    layer_patterns = pattern.cpu().numpy()
+                    layer_entropies = compute_head_entropy_fixed(layer_patterns)
                     for h in range(self.model.cfg.n_heads):
-                        head_pattern = pattern[h].cpu().numpy()
-                        entropy_profile = compute_head_entropy_fixed(head_pattern)
-                        head_data[(l, h)].append(entropy_profile)
+                        head_data[(l, h)].append(layer_entropies[h])
 
         all_vars = []
         results = {}
