@@ -1,10 +1,10 @@
 {
   "id": "hichambedrani/precision-system-v3-notebook",
-  "title": "precision-system-v3-notebook",
+  "title": "Genuineness Benchmark: Probing Reasoning circuits in LLMs",
   "code_file": "benchmark_run.py",
   "language": "python",
   "kernel_type": "script",
-  "is_private": "true",
+  "is_private": false,
   "enable_gpu": "true",
   "enable_internet": "true",
   "dataset_sources": [

@@ -7,7 +7,7 @@ from datetime import datetime
 import os
 
 class SyntheticReasoningDataset(Dataset):
-    def __init__(self, vocab_size, seq_len, num_samples=200):
+    def __init__(self, vocab_size, seq_len, num_samples=1000):
         self.vocab_size = vocab_size
         self.seq_len = seq_len
         self.num_samples = num_samples
@@ -30,7 +30,7 @@ class SyntheticReasoningDataset(Dataset):
         return torch.tensor(data, dtype=torch.long), torch.tensor(target, dtype=torch.long)
 
 def train():
-    device = "cpu"
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Training Improved Model on {device}...")
     vocab_size = 50257
 
@@ -44,12 +44,14 @@ def train():
 
     optimizer = optim.AdamW(model.parameters(), lr=5e-4)
 
-    dataset = SyntheticReasoningDataset(vocab_size, seq_len=64, num_samples=100)
-    loader = DataLoader(dataset, batch_size=20, shuffle=True)
+    # Increased num_samples and batch_size
+    dataset = SyntheticReasoningDataset(vocab_size, seq_len=64, num_samples=2000)
+    loader = DataLoader(dataset, batch_size=32, shuffle=True)
 
     gen_states = []
 
-    for epoch in range(2):
+    # Increased number of epochs for much more time
+    for epoch in range(10):
         epoch_loss = 0
         epoch_reg = 0
         for x, y in loader:

@@ -4,7 +4,7 @@ import sys
 
 # 1. Dependency Setup
 print("--- Initializing Genuineness Benchmark Environment ---")
-subprocess.run([sys.executable, "-m", "pip", "install", "torch==2.4.0", "transformers==4.44.0", "numpy==1.26.4", "transformer-lens==2.17.0", "jaxtyping", "beartype", "fancy_einsum", "einops", "--quiet", "--force-reinstall"])
+subprocess.run([sys.executable, "-m", "pip", "install", "transformer-lens", "transformers", "torch", "jaxtyping", "beartype", "fancy_einsum", "einops", "--quiet"])
 
 import torch
 import numpy as np
@@ -39,9 +39,9 @@ class PromptGenerator:
     @staticmethod
     def generate_ioi(n=30):
         templates = [
-            "{p1} and {p2} walked to the library together yesterday. {p1} found a {obj} on the shelf and gave it to",
-            "At the bookstore on Main Street, {p1} met {p2}. After browsing for a while, {p1} bought a {obj} and handed it directly to",
-            "{p1} told {p2} to wait by the entrance. Then {p1} came back carrying a {obj} and decided to give it to",
+            ("{p1} and {p2} walked to the library together yesterday. {p1} found a {obj} on the shelf and gave it to", "{p2}"),
+            ("At the bookstore on Main Street, {p1} met {p2}. After browsing for a while, {p1} bought a {obj} and handed it directly to", "{p2}"),
+            ("{p1} told {p2} to wait by the entrance. Then {p1} came back carrying a {obj} and decided to give it to", "{p2}"),
         ]
         names = [("Alice", "Bob"), ("John", "Mary"), ("Charlie", "David"), ("Eve", "Frank")]
         objects = ["apple", "book", "key", "pen", "phone"]
@@ -49,8 +49,11 @@ class PromptGenerator:
         for i in range(n):
             p1, p2 = names[i % len(names)]
             obj = objects[i % len(objects)]
-            template = templates[i % len(templates)]
-            prompts.append(template.format(p1=p1, p2=p2, obj=obj))
+            template, target_tpl = templates[i % len(templates)]
+            prompts.append({
+                "prompt": template.format(p1=p1, p2=p2, obj=obj),
+                "target": target_tpl.format(p1=p1, p2=p2, obj=obj)
+            })
         return prompts
 
     @staticmethod
@@ -93,10 +96,11 @@ class RealTargetingEngine:
             print(f"Error loading model: {e}")
             self.model = None
 
-    def _get_all_head_patterns(self, prompts):
+    def _get_all_head_patterns(self, ioi_data):
         head_data = defaultdict(list)
         with torch.no_grad():
-            for prompt in prompts:
+            for item in ioi_data:
+                prompt = item["prompt"] if isinstance(item, dict) else item
                 tokens = self.model.to_tokens(prompt)
                 _, cache = self.model.run_with_cache(tokens)
                 for l in range(self.model.cfg.n_layers):
@@ -105,9 +109,9 @@ class RealTargetingEngine:
                         head_data[(l, h)].append(compute_head_entropy_fixed(pattern[h].cpu().numpy()))
         return head_data
 
-    def find_genuine_heads(self, prompts):
+    def find_genuine_heads(self, ioi_data):
         if not self.model: return [], {}
-        head_data = self._get_all_head_patterns(prompts)
+        head_data = self._get_all_head_patterns(ioi_data)
         all_vars = []
         for (l, h), profiles in head_data.items():
             min_len = min(len(p) for p in profiles)
@@ -125,24 +129,26 @@ class RealTargetingEngine:
 
         return [k for k, v in results.items() if v["is_genuine"]], results
 
-    def run_ablation(self, target_heads_str, ioi_prompts, n_eval=15):
+    def run_ablation(self, target_heads_str, ioi_data, n_eval=15):
         if not self.model or not target_heads_str: return {"drop": 0}
         target_heads = [(int(s.split(".")[0]), int(s.split(".")[1])) for s in target_heads_str]
 
-        def get_prob(prompt):
+        def get_prob(item):
+            prompt = item["prompt"] if isinstance(item, dict) else item
+            target = item["target"] if isinstance(item, dict) else item.split()[2]
             tokens = self.model.to_tokens(prompt)
             with torch.no_grad(): logits = self.model(tokens)[0, -1, :]
             probs = torch.softmax(logits, dim=-1)
-            p2 = prompt.split()[2]
-            return float(probs[self.model.to_single_token(" " + p2)])
+            target_token = self.model.to_single_token(" " + target.strip())
+            return float(probs[target_token])
 
-        base = np.mean([get_prob(p) for p in ioi_prompts[:n_eval]])
+        base = np.mean([get_prob(p) for p in ioi_data[:n_eval]])
         def hook(value, hook, head_idx):
             value[:, head_idx, :, :] = 1.0 / value.shape[-1]
             return value
         for l, h in target_heads:
             self.model.add_hook(f"blocks.{l}.attn.hook_pattern", partial(hook, head_idx=h))
-        ablated = np.mean([get_prob(p) for p in ioi_prompts[:n_eval]])
+        ablated = np.mean([get_prob(p) for p in ioi_data[:n_eval]])
         self.model.reset_hooks()
         return {"baseline": float(base), "ablated": float(ablated), "drop": float(base - ablated)}
 
@@ -151,23 +157,22 @@ class RealTargetingEngine:
 def task_ioi_accuracy(model_id):
     engine = RealTargetingEngine(model_id)
     if not engine.model: return 0.0
-    prompts = PromptGenerator.generate_ioi(10)
+    ioi_data = PromptGenerator.generate_ioi(10)
     correct = 0
-    for p in prompts:
-        tokens = engine.model.to_tokens(p)
+    for item in ioi_data:
+        tokens = engine.model.to_tokens(item["prompt"])
         with torch.no_grad(): logits = engine.model(tokens)[0, -1, :]
-        p2 = p.split()[2]
-        pred = engine.model.to_string(logits.argmax())
-        if p2.strip().lower() in pred.strip().lower():
+        pred = engine.model.to_string(logits.argmax()).strip().lower()
+        if item["target"].strip().lower() in pred:
             correct += 1
-    return correct / len(prompts)
+    return correct / len(ioi_data)
 
 @kbench.task(name="Genuine Head Density", metric="fraction")
 def task_genuine_density(model_id):
     engine = RealTargetingEngine(model_id)
     if not engine.model: return 0.0
-    prompts = PromptGenerator.generate_ioi(5)
-    genuine_heads, _ = engine.find_genuine_heads(prompts)
+    ioi_data = PromptGenerator.generate_ioi(5)
+    genuine_heads, _ = engine.find_genuine_heads(ioi_data)
     total = engine.model.cfg.n_layers * engine.model.cfg.n_heads
     return len(genuine_heads) / total
 
@@ -175,11 +180,11 @@ def task_genuine_density(model_id):
 def task_separation(model_id):
     engine = RealTargetingEngine(model_id)
     if not engine.model: return 0.0
-    r_prompts = PromptGenerator.generate_ioi(5)
+    r_data = PromptGenerator.generate_ioi(5)
     p_prompts = PromptGenerator.generate_induction(5)
 
-    def get_avg_var(prompts):
-        head_data = engine._get_all_head_patterns(prompts)
+    def get_avg_var(data):
+        head_data = engine._get_all_head_patterns(data)
         vars = []
         for profiles in head_data.values():
             min_len = min(len(p) for p in profiles)
@@ -187,16 +192,16 @@ def task_separation(model_id):
             vars.append(np.var(mean_p))
         return np.mean(vars) if vars else 0.0
 
-    return get_avg_var(r_prompts) - get_avg_var(p_prompts)
+    return get_avg_var(r_data) - get_avg_var(p_prompts)
 
 @kbench.task(name="Ablation Causal Impact", metric="drop")
 def task_ablation_causal(model_id):
     engine = RealTargetingEngine(model_id)
     if not engine.model: return 0.0
-    prompts = PromptGenerator.generate_ioi(10)
-    genuine_heads, _ = engine.find_genuine_heads(prompts)
+    ioi_data = PromptGenerator.generate_ioi(10)
+    genuine_heads, _ = engine.find_genuine_heads(ioi_data)
     if not genuine_heads: return 0.0
-    ablation = engine.run_ablation(genuine_heads[:3], prompts)
+    ablation = engine.run_ablation(genuine_heads[:3], ioi_data)
     return ablation["drop"]
 
 @kbench.task(name="Output Genuineness Score", metric="score")
